@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin, requireSession } from "@/lib/auth";
+import { isMarketCategory, MARKET_CATEGORIES } from "@/lib/categories";
 import { getRequiredB } from "@/lib/lmsr";
 import { activeMarketWhere, serializeMarket } from "@/lib/markets";
 import { toDecimal, toNumber } from "@/lib/money";
@@ -17,18 +19,37 @@ const createSchema = z.object({
   maxLossAllowed: z.number().positive(),
   spreadMarkup: z.number().min(0).optional(),
   currency: z.enum(["REAL", "PLAY"]).optional(),
+  category: z
+    .enum(MARKET_CATEGORIES as unknown as [string, ...string[]])
+    .optional(),
 });
 
-export async function GET() {
+export async function GET(request: Request) {
   const auth = await requireSession();
   const isInternal = Boolean(auth.user?.isInternal);
+  const { searchParams } = new URL(request.url);
+  const q = (searchParams.get("q") || "").trim();
+  const categoryParam = (searchParams.get("category") || "").trim().toUpperCase();
+
+  const where: Prisma.MarketWhereInput = {
+    resolved: false,
+    closesAt: { gt: new Date() },
+    ...(isInternal ? {} : { tradingAccess: "PUBLIC" as const }),
+  };
+
+  if (categoryParam && isMarketCategory(categoryParam)) {
+    where.category = categoryParam;
+  }
+
+  if (q) {
+    where.OR = [
+      { question: { contains: q, mode: "insensitive" } },
+      { description: { contains: q, mode: "insensitive" } },
+    ];
+  }
 
   const list = await prisma.market.findMany({
-    where: {
-      resolved: false,
-      closesAt: { gt: new Date() },
-      ...(isInternal ? {} : { tradingAccess: "PUBLIC" as const }),
-    },
+    where,
     orderBy: { closesAt: "asc" },
   });
 
@@ -47,6 +68,7 @@ export async function POST(request: Request) {
   const currency = parsed.data.currency ?? "REAL";
   const spreadMarkup = parsed.data.spreadMarkup ?? 0.02;
   const maxLossAllowed = parsed.data.maxLossAllowed;
+  const category = parsed.data.category ?? "OTHER";
   const b = getRequiredB(maxLossAllowed, 2);
 
   let platformReserveSnapshot = 0;
@@ -82,6 +104,7 @@ export async function POST(request: Request) {
     data: {
       question: parsed.data.question,
       description: parsed.data.description,
+      category,
       closesAt: new Date(parsed.data.closesAt),
       maxLossAllowed: toDecimal(maxLossAllowed),
       liquidityParam: toDecimal(b),

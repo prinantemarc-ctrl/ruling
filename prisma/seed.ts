@@ -1,4 +1,4 @@
-import { PrismaClient, Outcome, TradeSide } from "@prisma/client";
+import { MarketCategory, PrismaClient, Outcome, TradeSide } from "@prisma/client";
 import {
   getCostToBuy,
   getDisplayCostToBuy,
@@ -12,6 +12,7 @@ const prisma = new PrismaClient();
 type SeedMarket = {
   question: string;
   description: string;
+  category: MarketCategory;
   closesAt: Date;
   bias: "YES" | "NO" | "MIXED";
   targetYes?: number;
@@ -22,6 +23,7 @@ const markets: SeedMarket[] = [
     question: "Will Democrats control the U.S. House after the 2026 midterms?",
     description:
       "Resolves YES if the Democratic Party holds a majority of House seats after the 2026 elections.",
+    category: "ELECTIONS",
     closesAt: new Date("2026-11-04T12:00:00Z"),
     bias: "YES",
     targetYes: 0.72,
@@ -30,6 +32,7 @@ const markets: SeedMarket[] = [
     question: "Will Republicans control the U.S. Senate after the 2026 midterms?",
     description:
       "Resolves YES if Republicans hold at least 51 Senate seats (or 50 + VP) after certification.",
+    category: "ELECTIONS",
     closesAt: new Date("2026-11-04T12:00:00Z"),
     bias: "MIXED",
     targetYes: 0.48,
@@ -38,6 +41,7 @@ const markets: SeedMarket[] = [
     question: "Will Bitcoin trade above $150,000 at any point in 2026?",
     description:
       "Resolves YES if BTC/USD prints above 150,000 on a major exchange before Jan 1, 2027.",
+    category: "CRYPTO",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "MIXED",
     targetYes: 0.41,
@@ -46,6 +50,7 @@ const markets: SeedMarket[] = [
     question: "Will Ethereum ETF spot AUM exceed $20B by end of 2026?",
     description:
       "Based on publicly reported aggregate AUM of U.S. spot ETH ETFs.",
+    category: "CRYPTO",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "YES",
     targetYes: 0.58,
@@ -54,6 +59,7 @@ const markets: SeedMarket[] = [
     question: "Will the Fed cut rates at least twice before July 2026?",
     description:
       "YES if the FOMC delivers two or more rate cuts with effective dates before July 1, 2026.",
+    category: "ECONOMY",
     closesAt: new Date("2026-12-15T00:00:00Z"),
     bias: "YES",
     targetYes: 0.63,
@@ -61,6 +67,7 @@ const markets: SeedMarket[] = [
   {
     question: "Will US CPI YoY print below 2.5% in any month of H2 2026?",
     description: "Uses BLS CPI-U year-over-year headline print.",
+    category: "ECONOMY",
     closesAt: new Date("2027-01-15T00:00:00Z"),
     bias: "MIXED",
     targetYes: 0.44,
@@ -69,6 +76,7 @@ const markets: SeedMarket[] = [
     question: "Will OpenAI launch a consumer GPT hardware device in 2026?",
     description:
       "YES if a first-party OpenAI-branded hardware device ships to consumers in 2026.",
+    category: "TECH",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "NO",
     targetYes: 0.28,
@@ -76,6 +84,7 @@ const markets: SeedMarket[] = [
   {
     question: "Will Apple release a foldable iPhone by end of 2026?",
     description: "YES if Apple ships a foldable iPhone SKU to retail in 2026.",
+    category: "TECH",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "NO",
     targetYes: 0.22,
@@ -84,6 +93,7 @@ const markets: SeedMarket[] = [
     question: "Will SpaceX achieve an uncrewed Starship orbital catch in 2026?",
     description:
       "YES if SpaceX publicly demonstrates catching a returning Starship (or booster+ship stack milestone as announced) in 2026.",
+    category: "SCIENCE",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "YES",
     targetYes: 0.55,
@@ -91,6 +101,7 @@ const markets: SeedMarket[] = [
   {
     question: "Will NVIDIA be the world's most valuable public company on Dec 31, 2026?",
     description: "By market capitalization at US market close on Dec 31, 2026.",
+    category: "ECONOMY",
     closesAt: new Date("2026-12-31T21:00:00Z"),
     bias: "MIXED",
     targetYes: 0.37,
@@ -98,6 +109,7 @@ const markets: SeedMarket[] = [
   {
     question: "Will France win the 2026 FIFA World Cup?",
     description: "Resolves YES if France is the tournament champion.",
+    category: "SPORTS",
     closesAt: new Date("2026-12-20T22:00:00Z"),
     bias: "MIXED",
     targetYes: 0.14,
@@ -105,6 +117,7 @@ const markets: SeedMarket[] = [
   {
     question: "Will the LA Lakers win the 2027 NBA Finals?",
     description: "YES if the Lakers are 2027 NBA champions.",
+    category: "SPORTS",
     closesAt: new Date("2027-06-30T00:00:00Z"),
     bias: "NO",
     targetYes: 0.11,
@@ -113,6 +126,7 @@ const markets: SeedMarket[] = [
     question: "Will Taylor Swift announce a new studio album in 2026?",
     description:
       "YES if a new original studio album (not re-recording only) is officially announced in 2026.",
+    category: "CULTURE",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "YES",
     targetYes: 0.61,
@@ -121,6 +135,7 @@ const markets: SeedMarket[] = [
     question: "Will a Grok / xAI model top LMSYS Arena overall in 2026?",
     description:
       "YES if any xAI model is ranked #1 overall on LMSYS Chatbot Arena for at least one official snapshot in 2026.",
+    category: "TECH",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "MIXED",
     targetYes: 0.33,
@@ -129,6 +144,7 @@ const markets: SeedMarket[] = [
     question: "Will the EU pass a new AI liability directive vote in 2026?",
     description:
       "YES if the European Parliament holds a final affirmative vote on a dedicated AI liability instrument in 2026.",
+    category: "POLITICS",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "YES",
     targetYes: 0.52,
@@ -136,6 +152,7 @@ const markets: SeedMarket[] = [
   {
     question: "Will crude oil (WTI) trade above $100 in 2026?",
     description: "YES if front-month WTI futures print above $100 any session in 2026.",
+    category: "ECONOMY",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "MIXED",
     targetYes: 0.35,
@@ -144,6 +161,7 @@ const markets: SeedMarket[] = [
     question: "Will Uber complete an acquisition >$5B enterprise value in 2026?",
     description:
       "YES if Uber announces and signs a deal with EV > $5B that closes or is definitive in 2026.",
+    category: "ECONOMY",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "NO",
     targetYes: 0.19,
@@ -151,6 +169,7 @@ const markets: SeedMarket[] = [
   {
     question: "Will Solana flip Ethereum by market cap in 2026?",
     description: "YES if SOL fully diluted or circulating mcap exceeds ETH at any UTC day close.",
+    category: "CRYPTO",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "NO",
     targetYes: 0.08,
@@ -158,6 +177,7 @@ const markets: SeedMarket[] = [
   {
     question: "Will a Category 5 hurricane make U.S. landfall in 2026?",
     description: "YES per NHC classification at landfall on the U.S. coastline.",
+    category: "SCIENCE",
     closesAt: new Date("2026-11-30T23:59:00Z"),
     bias: "MIXED",
     targetYes: 0.27,
@@ -166,9 +186,36 @@ const markets: SeedMarket[] = [
     question: "Will Netflix lose net paid subscribers in any quarter of 2026?",
     description:
       "YES if Netflix reports a sequential decline in global paid memberships for any FY2026 quarter.",
+    category: "CULTURE",
     closesAt: new Date("2026-12-31T23:59:00Z"),
     bias: "NO",
     targetYes: 0.31,
+  },
+  {
+    question: "Will China invade Taiwan before 2028?",
+    description:
+      "YES if PLA forces conduct a sustained amphibious or airborne invasion of Taiwan proper before Jan 1, 2028.",
+    category: "GEOPOLITICS",
+    closesAt: new Date("2027-12-31T23:59:00Z"),
+    bias: "NO",
+    targetYes: 0.12,
+  },
+  {
+    question: "Will a major Ukraine–Russia ceasefire be announced in 2026?",
+    description:
+      "YES if both governments publicly announce a formal ceasefire lasting ≥30 days in 2026.",
+    category: "CONFLICTS",
+    closesAt: new Date("2026-12-31T23:59:00Z"),
+    bias: "MIXED",
+    targetYes: 0.29,
+  },
+  {
+    question: "Will T1 win the 2026 League of Legends World Championship?",
+    description: "YES if T1 is the Worlds 2026 champion.",
+    category: "ESPORTS",
+    closesAt: new Date("2026-11-15T23:59:00Z"),
+    bias: "MIXED",
+    targetYes: 0.18,
   },
 ];
 
@@ -219,6 +266,7 @@ async function main() {
       data: {
         question: spec.question,
         description: spec.description,
+        category: spec.category,
         closesAt: spec.closesAt,
         liquidityParam: b,
         maxLossAllowed: maxLoss,

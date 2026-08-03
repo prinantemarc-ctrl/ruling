@@ -44,7 +44,25 @@
     "side": "Sens",
     "outcome": "Issue",
     "open": "Ouvert",
-    "closed": "Fermé"
+    "closed": "Fermé",
+    "searchPlaceholder": "Rechercher un marché…",
+    "allCategories": "Tous",
+    "noResults": "Aucun marché ne correspond à ta recherche.",
+    "resultsCount": "{count} marchés"
+  },
+  "categories": {
+    "POLITICS": "Politique",
+    "ELECTIONS": "Élections",
+    "GEOPOLITICS": "Géopolitique",
+    "CONFLICTS": "Conflits",
+    "ECONOMY": "Économie",
+    "CRYPTO": "Crypto",
+    "TECH": "Tech",
+    "SCIENCE": "Science",
+    "SPORTS": "Sports",
+    "ESPORTS": "Esports",
+    "CULTURE": "Culture",
+    "OTHER": "Autre"
   },
   "wallet": {
     "title": "Portefeuille",
@@ -135,6 +153,7 @@
     "createMarket": "Créer un marché",
     "question": "Question",
     "description": "Description / règles de résolution",
+    "category": "Catégorie",
     "create": "Créer (démarre en INTERNAL)",
     "createFailed": "Création impossible",
     "markets": "Tous les marchés",

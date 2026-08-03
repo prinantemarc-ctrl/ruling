@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { MARKET_CATEGORIES } from "@/lib/categories";
 
 type Market = {
   id: string;
   question: string;
+  category?: string;
   tradingAccess: string;
   resolved: boolean;
   closesAt: string;
@@ -25,6 +27,7 @@ type Withdrawal = {
 
 export default function AdminPage() {
   const t = useTranslations("admin");
+  const tCat = useTranslations("categories");
   const locale = useLocale();
   const [authed, setAuthed] = useState(false);
   const [secret, setSecret] = useState("");
@@ -36,6 +39,7 @@ export default function AdminPage() {
   const [form, setForm] = useState({
     question: "",
     description: "",
+    category: "POLITICS",
     closesAt: "",
     maxLossAllowed: "50",
     spreadMarkup: "0.02",
@@ -90,6 +94,7 @@ export default function AdminPage() {
       body: JSON.stringify({
         question: form.question,
         description: form.description,
+        category: form.category,
         closesAt,
         maxLossAllowed: Number(form.maxLossAllowed),
         spreadMarkup: Number(form.spreadMarkup),
@@ -105,6 +110,7 @@ export default function AdminPage() {
     setForm({
       question: "",
       description: "",
+      category: "POLITICS",
       closesAt: "",
       maxLossAllowed: "50",
       spreadMarkup: "0.02",
@@ -204,6 +210,17 @@ export default function AdminPage() {
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             className="sm:col-span-2 min-h-[88px] rounded-md border border-ink/10 bg-white/80 px-3 py-3"
           />
+          <select
+            value={form.category}
+            onChange={(e) => setForm({ ...form, category: e.target.value })}
+            className="rounded-md border border-ink/10 bg-white/80 px-3 py-3"
+          >
+            {MARKET_CATEGORIES.map((c) => (
+              <option key={c} value={c}>
+                {tCat(c)}
+              </option>
+            ))}
+          </select>
           <input
             required
             type="datetime-local"

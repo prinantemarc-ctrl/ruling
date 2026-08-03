@@ -44,7 +44,25 @@
     "side": "Side",
     "outcome": "Outcome",
     "open": "Open",
-    "closed": "Closed"
+    "closed": "Closed",
+    "searchPlaceholder": "Search markets…",
+    "allCategories": "All",
+    "noResults": "No markets match your search.",
+    "resultsCount": "{count} markets"
+  },
+  "categories": {
+    "POLITICS": "Politics",
+    "ELECTIONS": "Elections",
+    "GEOPOLITICS": "Geopolitics",
+    "CONFLICTS": "Conflicts",
+    "ECONOMY": "Economy",
+    "CRYPTO": "Crypto",
+    "TECH": "Tech",
+    "SCIENCE": "Science",
+    "SPORTS": "Sports",
+    "ESPORTS": "Esports",
+    "CULTURE": "Culture",
+    "OTHER": "Other"
   },
   "wallet": {
     "title": "Wallet",
@@ -135,6 +153,7 @@
     "createMarket": "Create market",
     "question": "Question",
     "description": "Description / resolution rules",
+    "category": "Category",
     "create": "Create (starts INTERNAL)",
     "createFailed": "Could not create market",
     "markets": "All markets",

@@ -30,6 +30,7 @@ export function serializeMarket(market: Market) {
     id: market.id,
     question: market.question,
     description: market.description,
+    category: market.category,
     closesAt: market.closesAt.toISOString(),
     resolved: market.resolved,
     resolvedOutcome: market.resolvedOutcome,
