@@ -6,6 +6,8 @@ export type SessionData = {
   userId?: string;
   isLoggedIn: boolean;
   nonce?: string;
+  /** Set when authenticated via ADMIN_API_SECRET (backoffice). */
+  isAdmin?: boolean;
 };
 
 export const sessionOptions: SessionOptions = {

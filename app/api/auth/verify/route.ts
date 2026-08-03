@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { SiweMessage } from "siwe";
 import { prisma } from "@/lib/prisma";
-import { normalizeAddress } from "@/lib/auth";
+import { isAdminWallet, normalizeAddress } from "@/lib/auth";
 import { getSession } from "@/lib/session";
+import { toDecimal } from "@/lib/money";
 
 export async function POST(request: Request) {
   try {
@@ -27,26 +28,49 @@ export async function POST(request: Request) {
     }
 
     const walletAddress = normalizeAddress(siwe.address);
+    const existing = await prisma.user.findUnique({ where: { walletAddress } });
+    const faucetAmount = Number(process.env.PLAY_FAUCET_AMOUNT || "1000");
+
     const user = await prisma.user.upsert({
       where: { walletAddress },
-      create: { walletAddress },
+      create: {
+        walletAddress,
+        playBalance: toDecimal(faucetAmount),
+        playFaucetClaimedAt: new Date(),
+      },
       update: {},
     });
+
+    // Welcome bonus if somehow created without faucet
+    if (existing && !existing.playFaucetClaimedAt) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          playBalance: { increment: toDecimal(faucetAmount) },
+          playFaucetClaimedAt: new Date(),
+        },
+      });
+    }
 
     session.walletAddress = walletAddress;
     session.userId = user.id;
     session.isLoggedIn = true;
+    session.isAdmin = isAdminWallet(walletAddress) || Boolean(session.isAdmin);
     session.nonce = undefined;
     await session.save();
 
+    const fresh = await prisma.user.findUniqueOrThrow({ where: { id: user.id } });
+
     return NextResponse.json({
       ok: true,
+      isNew: !existing,
       user: {
-        id: user.id,
-        walletAddress: user.walletAddress,
-        balance: user.balance.toString(),
-        playBalance: user.playBalance.toString(),
-        isInternal: user.isInternal,
+        id: fresh.id,
+        walletAddress: fresh.walletAddress,
+        balance: fresh.balance.toString(),
+        playBalance: fresh.playBalance.toString(),
+        isInternal: fresh.isInternal,
+        isAdmin: Boolean(session.isAdmin),
       },
     });
   } catch (e) {

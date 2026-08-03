@@ -12,17 +12,22 @@ export function Header() {
   const locale = useLocale();
   const [balance, setBalance] = useState<number | null>(null);
   const [address, setAddress] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/auth/me");
     if (!res.ok) {
       setBalance(null);
       setAddress(null);
+      // still check admin secret session
+      const admin = await fetch("/api/admin/session").then((r) => r.json());
+      setIsAdmin(Boolean(admin.isAdmin));
       return;
     }
     const data = await res.json();
     setBalance(data.balance);
     setAddress(data.walletAddress);
+    setIsAdmin(Boolean(data.isAdmin));
   }, []);
 
   useEffect(() => {
@@ -33,6 +38,7 @@ export function Header() {
     { href: `/${locale}/markets`, label: t("markets") },
     { href: `/${locale}/wallet`, label: t("wallet") },
     { href: `/${locale}/profile`, label: t("profile") },
+    { href: `/${locale}/account`, label: t("account") },
   ];
 
   return (
@@ -58,6 +64,14 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                href={`/${locale}/admin`}
+                className="rounded-md bg-ink px-3 py-1.5 text-sm font-700 text-accent"
+              >
+                {t("admin")}
+              </Link>
+            )}
           </nav>
         </div>
 
@@ -80,6 +94,14 @@ export function Header() {
                 )}
               </div>
             </div>
+          )}
+          {!address && (
+            <Link
+              href={`/${locale}/account`}
+              className="hidden rounded-md bg-accent px-3 py-1.5 text-xs font-700 text-accent-ink sm:inline-flex"
+            >
+              {t("signUp")}
+            </Link>
           )}
           <LanguageSwitcher />
           <AuthButton onSessionChange={load} />

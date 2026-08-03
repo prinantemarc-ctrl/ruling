@@ -16,7 +16,10 @@
     "buy": "Acheter",
     "sell": "Vendre",
     "metaDescription": "Tradez vos convictions. Marchés binaires réglés en USDC sur Polygon.",
-    "live": "Live"
+    "live": "Live",
+    "account": "Compte",
+    "admin": "Admin",
+    "signUp": "Créer un compte"
   },
   "markets": {
     "title": "Marchés",
@@ -96,5 +99,40 @@
     "insufficientReserve": "La réserve USDC de la plateforme est insuffisante pour ce marché.",
     "rateLimited": "Trop de demandes. Réessayez plus tard.",
     "invalidInput": "Saisie invalide."
+  },
+  "account": {
+    "badge": "Compte",
+    "subtitle": "Ton compte Ruling.bet, c’est ton wallet. Connecte, signe une fois, trade.",
+    "step1": "Connecte un wallet Polygon (MetaMask, Rainbow…).",
+    "step2": "Signe le message de login (SIWE) — c’est ton compte, sans mot de passe.",
+    "step3": "Reçois du play USDC tout de suite, ou dépose de vrais USDC pour les marchés live.",
+    "createAccount": "Créer un compte",
+    "yourAccount": "C’est bon",
+    "playBalance": "Play USDC",
+    "goWallet": "Déposer des USDC",
+    "goMarkets": "Voir les marchés"
+  },
+  "admin": {
+    "title": "Backoffice",
+    "badge": "Admin only",
+    "loginHint": "Entre ADMIN_API_SECRET pour gérer marchés et retraits.",
+    "secretPlaceholder": "Secret admin",
+    "login": "Entrer dans le backoffice",
+    "loginFailed": "Secret invalide",
+    "revenue": "Marge spread capturée",
+    "createMarket": "Créer un marché",
+    "question": "Question",
+    "description": "Description / règles de résolution",
+    "create": "Créer (démarre en INTERNAL)",
+    "createFailed": "Création impossible",
+    "markets": "Tous les marchés",
+    "publish": "Publier",
+    "resolveYes": "Résoudre OUI",
+    "resolveNo": "Résoudre NON",
+    "confirmResolve": "Résoudre ce marché en {outcome} ?",
+    "withdrawals": "Retraits",
+    "noWithdrawals": "Aucune demande de retrait.",
+    "markSent": "Marquer SENT",
+    "txHashPrompt": "Colle le hash de transaction on-chain (0x…)"
   }
 }

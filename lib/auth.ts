@@ -16,6 +16,11 @@ export function getAdminWallets(): Set<string> {
   );
 }
 
+export function isAdminWallet(address: string | undefined | null): boolean {
+  if (!address) return false;
+  return getAdminWallets().has(address.toLowerCase());
+}
+
 export async function requireSession() {
   const session = await getSession();
   if (!session.isLoggedIn || !session.userId || !session.walletAddress) {
@@ -37,10 +42,33 @@ export async function requireSession() {
 }
 
 export async function requireAdmin() {
+  const session = await getSession();
+
+  // Path A: admin secret session (backoffice login)
+  if (session.isAdmin && session.isLoggedIn) {
+    if (session.userId) {
+      const user = await prisma.user.findUnique({ where: { id: session.userId } });
+      if (user) return { error: null, session, user };
+    }
+    // Synthetic admin user for secret-only login
+    const admin = await prisma.user.upsert({
+      where: { walletAddress: "0xadmin000000000000000000000000000000000001" },
+      create: {
+        walletAddress: "0xadmin000000000000000000000000000000000001",
+        isInternal: true,
+        balance: 0,
+      },
+      update: { isInternal: true },
+    });
+    session.userId = admin.id;
+    session.walletAddress = admin.walletAddress;
+    await session.save();
+    return { error: null, session, user: admin };
+  }
+
   const result = await requireSession();
   if (result.error || !result.user) return result;
-  const admins = getAdminWallets();
-  if (!admins.has(result.user.walletAddress)) {
+  if (!isAdminWallet(result.user.walletAddress) && !session.isAdmin) {
     return {
       error: NextResponse.json({ error: "Forbidden" }, { status: 403 }),
       session: null,

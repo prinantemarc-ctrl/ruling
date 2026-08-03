@@ -16,7 +16,10 @@
     "buy": "Buy",
     "sell": "Sell",
     "metaDescription": "Trade real conviction. Binary markets settled in USDC on Polygon.",
-    "live": "Live"
+    "live": "Live",
+    "account": "Account",
+    "admin": "Admin",
+    "signUp": "Create account"
   },
   "markets": {
     "title": "Markets",
@@ -96,5 +99,40 @@
     "insufficientReserve": "Platform USDC reserve is insufficient for this market.",
     "rateLimited": "Too many requests. Try again later.",
     "invalidInput": "Invalid input."
+  },
+  "account": {
+    "badge": "Account",
+    "subtitle": "Your Ruling.bet account is your wallet. Connect, sign once, start trading.",
+    "step1": "Connect a Polygon wallet (MetaMask, Rainbow…).",
+    "step2": "Sign the login message (SIWE) — that's your account, no password.",
+    "step3": "Get play USDC instantly, or deposit real USDC to trade live markets.",
+    "createAccount": "Create account",
+    "yourAccount": "You're in",
+    "playBalance": "Play USDC",
+    "goWallet": "Deposit USDC",
+    "goMarkets": "Browse markets"
+  },
+  "admin": {
+    "title": "Backoffice",
+    "badge": "Admin only",
+    "loginHint": "Enter ADMIN_API_SECRET to manage markets and withdrawals.",
+    "secretPlaceholder": "Admin secret",
+    "login": "Enter backoffice",
+    "loginFailed": "Invalid secret",
+    "revenue": "Spread captured",
+    "createMarket": "Create market",
+    "question": "Question",
+    "description": "Description / resolution rules",
+    "create": "Create (starts INTERNAL)",
+    "createFailed": "Could not create market",
+    "markets": "All markets",
+    "publish": "Publish",
+    "resolveYes": "Resolve YES",
+    "resolveNo": "Resolve NO",
+    "confirmResolve": "Resolve this market as {outcome}?",
+    "withdrawals": "Withdrawals",
+    "noWithdrawals": "No withdrawal requests.",
+    "markSent": "Mark SENT",
+    "txHashPrompt": "Paste the on-chain tx hash (0x…)"
   }
 }
