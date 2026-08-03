@@ -16,22 +16,21 @@ export function LanguageSwitcher() {
   }
 
   return (
-    <div className="flex items-center gap-1 text-sm text-slate">
-      <button
-        type="button"
-        onClick={() => switchTo("en")}
-        className={locale === "en" ? "font-semibold text-ink" : "hover:text-ink"}
-      >
-        EN
-      </button>
-      <span aria-hidden>/</span>
-      <button
-        type="button"
-        onClick={() => switchTo("fr")}
-        className={locale === "fr" ? "font-semibold text-ink" : "hover:text-ink"}
-      >
-        FR
-      </button>
+    <div className="flex overflow-hidden rounded-md border border-ink/10 bg-white/70 text-xs font-600">
+      {(["en", "fr"] as const).map((code) => (
+        <button
+          key={code}
+          type="button"
+          onClick={() => switchTo(code)}
+          className={`px-2.5 py-1.5 uppercase tracking-wide transition ${
+            locale === code
+              ? "bg-ink text-accent"
+              : "text-ink/55 hover:text-ink"
+          }`}
+        >
+          {code}
+        </button>
+      ))}
     </div>
   );
 }

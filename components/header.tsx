@@ -9,7 +9,6 @@ import { truncateAddress } from "@/lib/money";
 
 export function Header() {
   const t = useTranslations("common");
-  const tw = useTranslations("wallet");
   const locale = useLocale();
   const [balance, setBalance] = useState<number | null>(null);
   const [address, setAddress] = useState<string | null>(null);
@@ -30,39 +29,56 @@ export function Header() {
     void load();
   }, [load]);
 
+  const nav = [
+    { href: `/${locale}/markets`, label: t("markets") },
+    { href: `/${locale}/wallet`, label: t("wallet") },
+    { href: `/${locale}/profile`, label: t("profile") },
+  ];
+
   return (
-    <header className="border-b border-line/80 bg-white/70 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
-        <div className="flex items-center gap-8">
-          <Link href={`/${locale}/markets`} className="brand text-2xl font-semibold tracking-tight text-ink">
-            {t("brand")}
+    <header className="sticky top-0 z-40 border-b border-ink/10 bg-[#f3f1ec]/75 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <div className="flex items-center gap-6">
+          <Link
+            href={`/${locale}/markets`}
+            className="brand group text-[1.65rem] font-800 leading-none text-ink sm:text-3xl"
+          >
+            Ruling
+            <span className="text-accent-deep transition-colors group-hover:text-accent">
+              .bet
+            </span>
           </Link>
-          <nav className="hidden items-center gap-5 text-sm text-slate sm:flex">
-            <Link href={`/${locale}/markets`} className="hover:text-ink">
-              {t("markets")}
-            </Link>
-            <Link href={`/${locale}/wallet`} className="hover:text-ink">
-              {t("wallet")}
-            </Link>
-            <Link href={`/${locale}/profile`} className="hover:text-ink">
-              {t("profile")}
-            </Link>
+          <nav className="hidden items-center gap-1 md:flex">
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-md px-3 py-1.5 text-sm font-medium text-ink/65 transition hover:bg-ink/5 hover:text-ink"
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
         </div>
-        <div className="flex items-center gap-4">
+
+        <div className="flex items-center gap-3 sm:gap-4">
           {balance !== null && (
-            <div className="hidden text-right text-sm sm:block">
-              <div className="font-medium text-ink">
-                {new Intl.NumberFormat(locale, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }).format(balance)}{" "}
-                {t("usdc")}
+            <div className="hidden items-center gap-2 rounded-md border border-ink/10 bg-white/70 px-3 py-1.5 sm:flex">
+              <span className="live-dot h-1.5 w-1.5 rounded-full bg-accent" />
+              <div className="text-right leading-tight">
+                <div className="font-display text-sm font-700 text-ink">
+                  {new Intl.NumberFormat(locale, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }).format(balance)}{" "}
+                  <span className="text-ink/50">{t("usdc")}</span>
+                </div>
+                {address && (
+                  <div className="font-mono text-[10px] text-slate">
+                    {truncateAddress(address)}
+                  </div>
+                )}
               </div>
-              {address && (
-                <div className="text-xs text-slate">{truncateAddress(address)}</div>
-              )}
-              <span className="sr-only">{tw("balance")}</span>
             </div>
           )}
           <LanguageSwitcher />

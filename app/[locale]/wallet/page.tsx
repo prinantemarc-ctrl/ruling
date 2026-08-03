@@ -150,100 +150,133 @@ export default function WalletPage() {
 
   if (!isConnected || !authed) {
     return (
-      <div>
-        <h1 className="brand text-3xl font-semibold">{t("title")}</h1>
-        <p className="mt-4 text-slate">{t("connectFirst")}</p>
+      <div className="surface-ink anim-rise grid-mesh rounded-[1.75rem] px-6 py-14 sm:px-10">
+        <h1 className="brand text-5xl font-800 text-white sm:text-6xl">
+          Ruling<span className="text-accent">.bet</span>
+        </h1>
+        <p className="mt-4 max-w-md text-lg text-white/65">{t("connectFirst")}</p>
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="brand text-3xl font-semibold">{t("title")}</h1>
-      <p className="mt-2 text-slate">{t("subtitle")}</p>
-      <p className="mt-6 text-2xl font-semibold text-ink">
-        {t("balance")}:{" "}
-        {balance === null
-          ? "—"
-          : `${format.number(balance, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })} ${tc("usdc")}`}
-      </p>
+      <section className="surface-ink anim-rise grid-mesh overflow-hidden rounded-[1.75rem] px-6 py-8 sm:px-10">
+        <p className="text-[10px] font-700 uppercase tracking-[0.22em] text-accent">
+          {t("title")}
+        </p>
+        <h1 className="display mt-2 text-3xl font-800 text-white sm:text-4xl">
+          {t("balance")}
+        </h1>
+        <p className="display mt-4 text-[clamp(2.5rem,8vw,4.5rem)] font-800 leading-none text-accent">
+          {balance === null
+            ? "—"
+            : format.number(balance, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+          <span className="ml-3 text-2xl text-white/40">{tc("usdc")}</span>
+        </p>
+        <p className="mt-3 text-sm text-white/45">{t("subtitle")}</p>
+      </section>
 
-      <div className="mt-8 grid gap-6 md:grid-cols-2">
-        <section className="border border-line bg-white/90 p-5">
-          <h2 className="font-semibold">{t("deposit")}</h2>
-          <label className="mt-4 block text-xs uppercase text-slate">
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <section className="surface anim-rise anim-rise-delay-1 rounded-2xl p-5 sm:p-6">
+          <h2 className="display text-xl font-700 text-ink">{t("deposit")}</h2>
+          <label className="mt-5 block text-[10px] font-700 uppercase tracking-[0.18em] text-slate">
             {t("amount")}
           </label>
           <input
             type="number"
             value={depositAmount}
             onChange={(e) => setDepositAmount(e.target.value)}
-            className="mt-1 w-full border border-line bg-paper px-3 py-2"
+            className="mt-2 w-full rounded-md border border-ink/10 bg-white/80 px-3 py-3 outline-none ring-accent focus:ring-2"
           />
           <button
             type="button"
             disabled={isPending || confirming}
             onClick={onDeposit}
-            className="mt-4 w-full bg-accent px-4 py-2.5 text-sm font-medium text-white disabled:opacity-50"
+            className="btn-signal mt-4 w-full rounded-md px-4 py-3 text-sm disabled:opacity-50"
           >
             {t("depositCta")}
           </button>
         </section>
 
-        <section className="border border-line bg-white/90 p-5">
-          <h2 className="font-semibold">{t("withdraw")}</h2>
-          <label className="mt-4 block text-xs uppercase text-slate">
+        <section className="surface anim-rise anim-rise-delay-2 rounded-2xl p-5 sm:p-6">
+          <h2 className="display text-xl font-700 text-ink">{t("withdraw")}</h2>
+          <label className="mt-5 block text-[10px] font-700 uppercase tracking-[0.18em] text-slate">
             {t("amount")}
           </label>
           <input
             type="number"
             value={withdrawAmount}
             onChange={(e) => setWithdrawAmount(e.target.value)}
-            className="mt-1 w-full border border-line bg-paper px-3 py-2"
+            className="mt-2 w-full rounded-md border border-ink/10 bg-white/80 px-3 py-3 outline-none ring-accent focus:ring-2"
           />
-          <label className="mt-3 block text-xs uppercase text-slate">
+          <label className="mt-3 block text-[10px] font-700 uppercase tracking-[0.18em] text-slate">
             {t("destination")}
           </label>
           <input
             type="text"
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
-            className="mt-1 w-full border border-line bg-paper px-3 py-2 font-mono text-sm"
+            className="mt-2 w-full rounded-md border border-ink/10 bg-white/80 px-3 py-3 font-mono text-sm outline-none ring-accent focus:ring-2"
           />
           <button
             type="button"
             onClick={onWithdraw}
-            className="mt-4 w-full border border-accent px-4 py-2.5 text-sm font-medium text-accent"
+            className="mt-4 w-full rounded-md border border-ink bg-ink px-4 py-3 text-sm font-700 text-accent transition hover:bg-ink-2"
           >
             {t("withdrawCta")}
           </button>
         </section>
       </div>
 
-      {statusMsg && <p className="mt-4 text-sm text-slate">{statusMsg}</p>}
+      {statusMsg && (
+        <p className="mt-4 rounded-md bg-accent/20 px-4 py-3 text-sm font-600 text-accent-ink">
+          {statusMsg}
+        </p>
+      )}
 
-      <section className="mt-10">
-        <h2 className="font-semibold">{t("history")}</h2>
-        <div className="mt-4 grid gap-6 md:grid-cols-2">
-          <div>
-            <h3 className="text-sm uppercase text-slate">{t("deposits")}</h3>
-            <ul className="mt-2 space-y-2 text-sm">
+      <section className="mt-8">
+        <h2 className="display text-2xl font-700 text-ink">{t("history")}</h2>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div className="surface rounded-2xl p-4">
+            <h3 className="text-[10px] font-700 uppercase tracking-[0.18em] text-slate">
+              {t("deposits")}
+            </h3>
+            <ul className="mt-3 space-y-2">
               {deposits.map((d) => (
-                <li key={d.id} className="border border-line bg-white/70 px-3 py-2">
-                  {format.number(d.amount)} {tc("usdc")} · {statusLabel(d.status)}
+                <li
+                  key={d.id}
+                  className="flex items-center justify-between rounded-lg bg-ink/[0.03] px-3 py-2.5 text-sm"
+                >
+                  <span className="font-700 text-ink">
+                    {format.number(d.amount)} {tc("usdc")}
+                  </span>
+                  <span className="text-xs font-600 text-slate">
+                    {statusLabel(d.status)}
+                  </span>
                 </li>
               ))}
             </ul>
           </div>
-          <div>
-            <h3 className="text-sm uppercase text-slate">{t("withdrawals")}</h3>
-            <ul className="mt-2 space-y-2 text-sm">
+          <div className="surface rounded-2xl p-4">
+            <h3 className="text-[10px] font-700 uppercase tracking-[0.18em] text-slate">
+              {t("withdrawals")}
+            </h3>
+            <ul className="mt-3 space-y-2">
               {withdrawals.map((w) => (
-                <li key={w.id} className="border border-line bg-white/70 px-3 py-2">
-                  {format.number(w.amount)} {tc("usdc")} · {statusLabel(w.status)}
+                <li
+                  key={w.id}
+                  className="flex items-center justify-between rounded-lg bg-ink/[0.03] px-3 py-2.5 text-sm"
+                >
+                  <span className="font-700 text-ink">
+                    {format.number(w.amount)} {tc("usdc")}
+                  </span>
+                  <span className="text-xs font-600 text-slate">
+                    {statusLabel(w.status)}
+                  </span>
                 </li>
               ))}
             </ul>

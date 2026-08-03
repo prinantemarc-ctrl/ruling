@@ -3,31 +3,190 @@
 @tailwind utilities;
 
 :root {
-  --ink: #0f1419;
-  --slate: #3d4a5c;
-  --mist: #e8edf2;
-  --paper: #f4f6f8;
-  --line: #d0d7de;
-  --accent: #1a5f4a;
-  --accent-soft: #d9ebe4;
-  --danger: #8b2e2e;
+  --ink: #0b0d10;
+  --ink-2: #141820;
+  --slate: #6b7280;
+  --mist: #e6e8ec;
+  --paper: #f3f1ec;
+  --paper-2: #ebe7df;
+  --line: #d5d0c8;
+  --accent: #c6f135;
+  --accent-deep: #9bc40a;
+  --accent-ink: #12150a;
+  --yes: #c6f135;
+  --no: #ff5c4d;
+  --danger: #d64545;
   --background: var(--paper);
   --foreground: var(--ink);
 }
 
-body {
-  color: var(--foreground);
-  background:
-    radial-gradient(1200px 600px at 10% -10%, #e7eef5 0%, transparent 55%),
-    radial-gradient(900px 500px at 100% 0%, #e4efe9 0%, transparent 50%),
-    var(--paper);
-  font-family: "IBM Plex Sans", "Source Sans 3", sans-serif;
-  min-height: 100vh;
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-h1,
-h2,
-h3,
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes bar-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(2%, -1%, 0) rotate(1deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--foreground);
+  background-color: var(--paper);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(900px 500px at 8% -5%, rgba(198, 241, 53, 0.22), transparent 55%),
+    radial-gradient(700px 420px at 95% 8%, rgba(255, 92, 77, 0.12), transparent 50%),
+    linear-gradient(165deg, #f7f5f0 0%, #ece8e0 45%, #e4e9df 100%);
+  animation: drift 18s ease-in-out infinite;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
 .brand {
-  font-family: "IBM Plex Serif", "Source Serif 4", Georgia, serif;
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: -0.04em;
+}
+
+.display {
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: -0.045em;
+}
+
+.anim-rise {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-rise-delay-1 {
+  animation-delay: 0.08s;
+}
+
+.anim-rise-delay-2 {
+  animation-delay: 0.16s;
+}
+
+.anim-rise-delay-3 {
+  animation-delay: 0.24s;
+}
+
+.prob-bar-fill {
+  transform-origin: left center;
+  animation: bar-fill 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.live-dot {
+  box-shadow: 0 0 0 0 rgba(198, 241, 53, 0.55);
+  animation: pulse-soft 1.8s ease-in-out infinite;
+}
+
+.grid-mesh {
+  background-image:
+    linear-gradient(rgba(11, 13, 16, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 13, 16, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.surface {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(11, 13, 16, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.surface-ink {
+  background: linear-gradient(160deg, #12151c 0%, #0b0d10 70%);
+  color: #f3f1ec;
+  border: 1px solid rgba(198, 241, 53, 0.18);
+}
+
+.btn-signal {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 650;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn-signal:hover {
+  background: #d4ff4f;
+  transform: translateY(-1px);
+}
+
+.btn-signal:active {
+  transform: translateY(0);
+}
+
+.market-row {
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.market-row:hover {
+  transform: translateX(4px);
+  border-color: rgba(198, 241, 53, 0.65);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.ticker-track {
+  animation: ticker 28s linear infinite;
 }

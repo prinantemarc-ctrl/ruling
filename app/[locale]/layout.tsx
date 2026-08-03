@@ -1,21 +1,21 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { IBM_Plex_Sans, IBM_Plex_Serif } from "next/font/google";
+import { DM_Sans, Syne } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/header";
 
-const sans = IBM_Plex_Sans({
+const sans = DM_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
 });
 
-const serif = IBM_Plex_Serif({
+const display = Syne({
   subsets: ["latin"],
-  weight: ["500", "600"],
-  variable: "--font-serif",
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-display",
 });
 
 export function generateStaticParams() {
@@ -30,7 +30,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale: params.locale, namespace: "common" });
   return {
     title: t("brand"),
-    description: "Prediction markets settled in USDC",
+    description: t("metaDescription"),
   };
 }
 
@@ -48,11 +48,13 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <body className={`${sans.variable} ${serif.variable} antialiased`}>
+      <body className={`${sans.variable} ${display.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <Header />
-            <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
+            <main className="relative mx-auto min-h-[calc(100vh-5rem)] max-w-6xl px-4 pb-16 pt-6 sm:px-6">
+              {children}
+            </main>
           </Providers>
         </NextIntlClientProvider>
       </body>
