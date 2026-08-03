@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
@@ -17,7 +16,6 @@ export default function AccountPage() {
     walletAddress: string;
     balance: number;
     playBalance: number;
-    isNew?: boolean;
   } | null>(null);
 
   const load = useCallback(async () => {
@@ -65,21 +63,9 @@ export default function AccountPage() {
           </li>
         </ol>
 
-        <div className="mt-8 flex flex-wrap items-center gap-3">
+        <div className="mt-8 flex flex-col items-start gap-3">
           <AuthButton onSessionChange={load} />
-          <ConnectButton.Custom>
-            {({ openConnectModal, mounted, account }) =>
-              mounted && !account ? (
-                <button
-                  type="button"
-                  onClick={openConnectModal}
-                  className="btn-signal rounded-md px-5 py-3 text-sm"
-                >
-                  {t("createAccount")}
-                </button>
-              ) : null
-            }
-          </ConnectButton.Custom>
+          <p className="max-w-md text-xs text-white/45">{t("walletTip")}</p>
         </div>
       </section>
 

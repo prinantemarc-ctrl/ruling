@@ -100,6 +100,17 @@
     "rateLimited": "Trop de demandes. Réessayez plus tard.",
     "invalidInput": "Saisie invalide."
   },
+  "auth": {
+    "connect": "Connecter le wallet",
+    "connecting": "Connexion…",
+    "signIn": "Se connecter à Ruling.bet",
+    "signing": "Valide dans ton wallet…",
+    "wrongNetwork": "Passer sur Polygon",
+    "siweStatement": "Connexion à Ruling.bet",
+    "nonceFailed": "Impossible de démarrer la connexion. Réessaie.",
+    "verifyFailed": "Échec de la vérification.",
+    "signRejected": "Signature refusée. Réessaie."
+  },
   "account": {
     "badge": "Compte",
     "subtitle": "Ton compte Ruling.bet, c’est ton wallet. Connecte, signe une fois, trade.",
@@ -110,7 +121,8 @@
     "yourAccount": "C’est bon",
     "playBalance": "Play USDC",
     "goWallet": "Déposer des USDC",
-    "goMarkets": "Voir les marchés"
+    "goMarkets": "Voir les marchés",
+    "walletTip": "Installe MetaMask (ou un autre wallet Polygon), puis clique sur Connecter. Ensuite, approuve le message de signature."
   },
   "admin": {
     "title": "Backoffice",

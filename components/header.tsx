@@ -104,7 +104,9 @@ export function Header() {
             </Link>
           )}
           <LanguageSwitcher />
-          <AuthButton onSessionChange={load} />
+          <div className="scale-[0.92] sm:scale-100">
+            <AuthButton onSessionChange={load} />
+          </div>
         </div>
       </div>
     </header>
