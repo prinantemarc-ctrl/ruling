@@ -3,25 +3,31 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --ink: #0f1419;
+  --slate: #3d4a5c;
+  --mist: #e8edf2;
+  --paper: #f4f6f8;
+  --line: #d0d7de;
+  --accent: #1a5f4a;
+  --accent-soft: #d9ebe4;
+  --danger: #8b2e2e;
+  --background: var(--paper);
+  --foreground: var(--ink);
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #e7eef5 0%, transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, #e4efe9 0%, transparent 50%),
+    var(--paper);
+  font-family: "IBM Plex Sans", "Source Sans 3", sans-serif;
+  min-height: 100vh;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+h1,
+h2,
+h3,
+.brand {
+  font-family: "IBM Plex Serif", "Source Serif 4", Georgia, serif;
 }

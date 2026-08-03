@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DepositStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
+enum WithdrawStatus {
+  PENDING
+  PROCESSING
+  SENT
+  FAILED
+}
+
+enum Outcome {
+  YES
+  NO
+}
+
+enum TradeSide {
+  BUY
+  SELL
+}
+
+enum TradingAccess {
+  INTERNAL
+  PUBLIC
+}
+
+enum MarketCurrency {
+  REAL
+  PLAY
+}
+
+model User {
+  id                  String            @id @default(cuid())
+  walletAddress       String            @unique
+  balance             Decimal           @default(0) @db.Decimal(18, 6)
+  playBalance         Decimal           @default(0) @db.Decimal(18, 6)
+  playFaucetClaimedAt DateTime?
+  isInternal          Boolean           @default(false)
+  createdAt           DateTime          @default(now())
+  deposits            DepositRequest[]
+  withdrawals         WithdrawRequest[]
+  trades              Trade[]
+  positions           Position[]
+}
+
+model DepositRequest {
+  id          String        @id @default(cuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  amount      Decimal       @db.Decimal(18, 6)
+  txHash      String?       @unique
+  status      DepositStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  confirmedAt DateTime?
+
+  @@index([status])
+  @@index([userId])
+}
+
+model WithdrawRequest {
+  id                 String         @id @default(cuid())
+  userId             String
+  user               User           @relation(fields: [userId], references: [id])
+  amount             Decimal        @db.Decimal(18, 6)
+  destinationAddress String
+  txHash             String?        @unique
+  status             WithdrawStatus @default(PENDING)
+  createdAt          DateTime       @default(now())
+  processedAt        DateTime?
+
+  @@index([status])
+  @@index([userId])
+}
+
+model Market {
+  id                      String         @id @default(cuid())
+  question                String
+  description             String
+  closesAt                DateTime
+  resolved                Boolean        @default(false)
+  resolvedOutcome         Outcome?
+  liquidityParam          Decimal        @db.Decimal(36, 18)
+  maxLossAllowed          Decimal        @db.Decimal(18, 6)
+  platformReserveSnapshot Decimal        @default(0) @db.Decimal(18, 6)
+  spreadMarkup            Decimal        @default(0.02) @db.Decimal(18, 6)
+  currency                MarketCurrency @default(REAL)
+  tradingAccess           TradingAccess  @default(INTERNAL)
+  qYes                    Decimal        @default(0) @db.Decimal(36, 18)
+  qNo                     Decimal        @default(0) @db.Decimal(36, 18)
+  createdAt               DateTime       @default(now())
+  publishedAt             DateTime?
+  trades                  Trade[]
+  positions               Position[]
+
+  @@index([closesAt])
+  @@index([currency, resolved])
+}
+
+model Trade {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  marketId        String
+  market          Market   @relation(fields: [marketId], references: [id])
+  side            TradeSide
+  outcome         Outcome
+  shares          Decimal  @db.Decimal(36, 18)
+  cost            Decimal  @db.Decimal(18, 6)
+  fairCost        Decimal  @db.Decimal(18, 6)
+  priceAtTrade    Decimal  @db.Decimal(18, 8)
+  platformMargin  Decimal  @db.Decimal(18, 6)
+  createdAt       DateTime @default(now())
+
+  @@index([marketId, createdAt])
+  @@index([userId])
+}
+
+model Position {
+  id          String  @id @default(cuid())
+  userId      String
+  user        User    @relation(fields: [userId], references: [id])
+  marketId    String
+  market      Market  @relation(fields: [marketId], references: [id])
+  outcome     Outcome
+  sharesOwned Decimal @default(0) @db.Decimal(36, 18)
+
+  @@unique([userId, marketId, outcome])
+  @@index([userId])
+}

@@ -9,8 +9,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        ink: "var(--ink)",
+        slate: "var(--slate)",
+        mist: "var(--mist)",
+        paper: "var(--paper)",
+        line: "var(--line)",
+        accent: "var(--accent)",
+        "accent-soft": "var(--accent-soft)",
+        danger: "var(--danger)",
+      },
+      fontFamily: {
+        sans: ['"IBM Plex Sans"', '"Source Sans 3"', "sans-serif"],
+        serif: ['"IBM Plex Serif"', '"Source Serif 4"', "Georgia", "serif"],
       },
     },
   },
