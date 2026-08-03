@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { Prisma } from "@prisma/client";
+import { MarketCategory, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin, requireSession } from "@/lib/auth";
 import { isMarketCategory, MARKET_CATEGORIES } from "@/lib/categories";
@@ -12,6 +12,10 @@ import {
   validateMarketCreation,
 } from "@/lib/risk";
 
+const categoryEnum = z.enum(
+  MARKET_CATEGORIES as unknown as [MarketCategory, ...MarketCategory[]]
+);
+
 const createSchema = z.object({
   question: z.string().min(3),
   description: z.string().min(1),
@@ -19,9 +23,7 @@ const createSchema = z.object({
   maxLossAllowed: z.number().positive(),
   spreadMarkup: z.number().min(0).optional(),
   currency: z.enum(["REAL", "PLAY"]).optional(),
-  category: z
-    .enum(MARKET_CATEGORIES as unknown as [string, ...string[]])
-    .optional(),
+  category: categoryEnum.optional(),
 });
 
 export async function GET(request: Request) {
@@ -68,7 +70,7 @@ export async function POST(request: Request) {
   const currency = parsed.data.currency ?? "REAL";
   const spreadMarkup = parsed.data.spreadMarkup ?? 0.02;
   const maxLossAllowed = parsed.data.maxLossAllowed;
-  const category = parsed.data.category ?? "OTHER";
+  const category: MarketCategory = parsed.data.category ?? MarketCategory.OTHER;
   const b = getRequiredB(maxLossAllowed, 2);
 
   let platformReserveSnapshot = 0;
